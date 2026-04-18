@@ -17,6 +17,8 @@
   "devDependencies": {
     "@discordjs/builders": "^1.8.1",
     "@discordjs/rest": "^2.3.0",
-    "discord-api-types": "^0.37.86"
+    "@types/node": "^25.6.0",
+    "discord-api-types": "^0.37.86",
+    "typescript": "^6.0.3"
   }
 }
