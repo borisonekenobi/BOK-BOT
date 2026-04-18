@@ -1,13 +1,22 @@
 {
-  "name": "discord-bot",
+  "name": "bok-bot",
   "version": "9.0.5",
   "description": "BOK BOT",
+  "homepage": "https://github.com/borisonekenobi/BOK-BOT#readme",
+  "bugs": {
+    "url": "https://github.com/borisonekenobi/BOK-BOT/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/borisonekenobi/BOK-BOT.git"
+  },
+  "license": "MIT",
+  "author": "Boris Vasilev",
+  "type": "commonjs",
   "main": "index.js",
   "scripts": {
     "start": "node ."
   },
-  "author": "Boris Vasilev",
-  "license": "ISC",
   "dependencies": {
     "discord-slash-commands-client": "^1.2.2",
     "discord.js": "^13.6.0",
