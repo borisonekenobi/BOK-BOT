@@ -1,10 +1,12 @@
+const {log} = require('../../logger.ts');
+
 function test() {
-    console.log('test successful');
+    log.verbose('test successful');
 }
 
 function help() {
-    console.log('test');
-    console.log('    Tests whether the bot is on.');
+    log.verbose('test');
+    log.verbose('    Tests whether the bot is on.');
 }
 
 module.exports = {test, help}

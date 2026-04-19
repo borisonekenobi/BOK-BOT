@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS roles
+(
+    id NUMERIC(19, 0) NOT NULL,
+
+    CONSTRAINT pk_role_id PRIMARY KEY (id)
+);
