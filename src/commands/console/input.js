@@ -1,3 +1,5 @@
+const {log} = require('../../logger.ts');
+
 const ct = require('./test.js');
 const cr = require('./restart.js');
 const cs = require('./stop.js');
@@ -35,8 +37,8 @@ function input(bot, res) {
         }
 
     } else {
-        console.log(consoleMsg + ': command not found')
-        console.log('Use \'help --all\' for help.')
+        log.info(consoleMsg + ': command not found')
+        log.info('Use \'help --all\' for help.')
 
     }
 }

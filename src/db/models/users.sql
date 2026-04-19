@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS users
+(
+    id NUMERIC(19, 0) NOT NULL,
+
+    CONSTRAINT pk_user_id PRIMARY KEY (id)
+);

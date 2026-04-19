@@ -1,0 +1,265 @@
+{
+  "commands": [
+    {
+      "id": "1244808805968117862",
+      "application_id": "904026847682105374",
+      "version": "1245238009503285268",
+      "default_member_permissions": null,
+      "type": 1,
+      "name": "level",
+      "description": "Checks your level",
+      "dm_permission": true,
+      "contexts": null,
+      "integration_types": [
+        0
+      ],
+      "options": [
+        {
+          "type": 6,
+          "name": "user",
+          "description": "Check level of another user"
+        }
+      ],
+      "nsfw": false
+    },
+    {
+      "id": "1245231333710495754",
+      "application_id": "904026847682105374",
+      "version": "1245231333710495757",
+      "default_member_permissions": null,
+      "type": 1,
+      "name": "test",
+      "description": "Tests connection to bot",
+      "dm_permission": true,
+      "contexts": null,
+      "integration_types": [
+        0
+      ],
+      "nsfw": false
+    },
+    {
+      "id": "1245231333710495755",
+      "application_id": "904026847682105374",
+      "version": "1245231333710495758",
+      "default_member_permissions": "268435456",
+      "type": 1,
+      "name": "startscore",
+      "description": "Scores all members in the server",
+      "dm_permission": true,
+      "contexts": null,
+      "integration_types": [
+        0
+      ],
+      "nsfw": false
+    },
+    {
+      "id": "1245231333710495756",
+      "application_id": "904026847682105374",
+      "version": "1245237434917322917",
+      "default_member_permissions": "268435456",
+      "type": 1,
+      "name": "role",
+      "description": "Update role settings",
+      "dm_permission": true,
+      "contexts": null,
+      "integration_types": [
+        0
+      ],
+      "options": [
+        {
+          "type": 1,
+          "name": "add",
+          "description": "Add new role to the list",
+          "options": [
+            {
+              "type": 8,
+              "name": "role",
+              "description": "Role that is being added to the list",
+              "required": true
+            },
+            {
+              "type": 4,
+              "name": "level",
+              "description": "The level at which it's being added to the list",
+              "required": true
+            }
+          ]
+        },
+        {
+          "type": 1,
+          "name": "edit",
+          "description": "Changes an already setup role",
+          "options": [
+            {
+              "type": 8,
+              "name": "role",
+              "description": "Role that is being changed",
+              "required": true
+            },
+            {
+              "type": 4,
+              "name": "level",
+              "description": "The new level that this role will be set to",
+              "required": true
+            }
+          ]
+        },
+        {
+          "type": 1,
+          "name": "list",
+          "description": "Lists all roles and their levels"
+        },
+        {
+          "type": 1,
+          "name": "remove",
+          "description": "Changes an already setup role",
+          "options": [
+            {
+              "type": 8,
+              "name": "role",
+              "description": "Role that is being changed",
+              "required": true
+            }
+          ]
+        }
+      ],
+      "nsfw": false
+    },
+    {
+      "id": "1245237434917322915",
+      "application_id": "904026847682105374",
+      "version": "1245237434917322918",
+      "default_member_permissions": null,
+      "type": 1,
+      "name": "logs",
+      "description": "Setup or disable logs",
+      "dm_permission": true,
+      "contexts": null,
+      "integration_types": [
+        0
+      ],
+      "options": [
+        {
+          "type": 1,
+          "name": "setup",
+          "description": "Setup logs",
+          "options": [
+            {
+              "type": 7,
+              "name": "channel",
+              "description": "The channel where the logs will be created",
+              "required": true
+            }
+          ]
+        },
+        {
+          "type": 1,
+          "name": "disable",
+          "description": "Disable logs"
+        }
+      ],
+      "nsfw": false
+    },
+    {
+      "id": "1245237434917322916",
+      "application_id": "904026847682105374",
+      "version": "1245237434917322919",
+      "default_member_permissions": "268435456",
+      "type": 1,
+      "name": "buttonrole",
+      "description": "Use a button to give a role",
+      "dm_permission": true,
+      "contexts": null,
+      "integration_types": [
+        0
+      ],
+      "options": [
+        {
+          "type": 1,
+          "name": "create",
+          "description": "Create a message",
+          "options": [
+            {
+              "type": 3,
+              "name": "message",
+              "description": "The message that will be sent",
+              "required": true
+            },
+            {
+              "type": 8,
+              "name": "role1",
+              "description": "The role that will be given when the button is clicked",
+              "required": true
+            },
+            {
+              "type": 8,
+              "name": "role2",
+              "description": "The role that will be given when the button is clicked"
+            },
+            {
+              "type": 8,
+              "name": "role3",
+              "description": "The role that will be given when the button is clicked"
+            },
+            {
+              "type": 8,
+              "name": "role4",
+              "description": "The role that will be given when the button is clicked"
+            },
+            {
+              "type": 8,
+              "name": "role5",
+              "description": "The role that will be given when the button is clicked"
+            }
+          ]
+        },
+        {
+          "type": 1,
+          "name": "edit",
+          "description": "Edit the message or buttons of an already existing message",
+          "options": [
+            {
+              "type": 3,
+              "name": "messageid",
+              "description": "ID of the message that will be deleted",
+              "required": true
+            },
+            {
+              "type": 3,
+              "name": "message",
+              "description": "The message that will be sent",
+              "required": true
+            },
+            {
+              "type": 8,
+              "name": "role1",
+              "description": "The role that will be given when the button is clicked",
+              "required": true
+            },
+            {
+              "type": 8,
+              "name": "role2",
+              "description": "The role that will be given when the button is clicked"
+            },
+            {
+              "type": 8,
+              "name": "role3",
+              "description": "The role that will be given when the button is clicked"
+            },
+            {
+              "type": 8,
+              "name": "role4",
+              "description": "The role that will be given when the button is clicked"
+            },
+            {
+              "type": 8,
+              "name": "role5",
+              "description": "The role that will be given when the button is clicked"
+            }
+          ]
+        }
+      ],
+      "nsfw": false
+    }
+  ]
+}

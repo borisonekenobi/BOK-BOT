@@ -1,3 +1,5 @@
+const {log} = require('../../logger.ts')
+
 const ct = require('./test.js');
 const cr = require('./restart.js');
 const cs = require('./stop.js');
@@ -7,15 +9,15 @@ const cc = require('./crash.js');
 
 function help(consoleMsg) {
     if (consoleMsg === 'help' || consoleMsg === 'help -a' || consoleMsg === 'help --all') {
-        console.log('Type \'help --command\' to find out more about the function \'command\'.');
-        console.log();
-        console.log(' crash [E]');
-        console.log(' help [-a]');
-        console.log(' pull');
-        console.log(' restart');
-        console.log(' stop');
-        console.log(' test');
-        console.log(' version');
+        log.info('Type \'help --command\' to find out more about the function \'command\'.');
+        log.info();
+        log.info(' crash [E]');
+        log.info(' help [-a]');
+        log.info(' pull');
+        log.info(' restart');
+        log.info(' stop');
+        log.info(' test');
+        log.info(' version');
         //TODO: List all commands
 
     } else if (consoleMsg === 'help --test') {
@@ -37,8 +39,8 @@ function help(consoleMsg) {
         cc.help();
 
     } else {
-        console.log(consoleMsg + ': command not found')
-        console.log('use \'help --all\' for help')
+        log.info(consoleMsg + ': command not found')
+        log.info('use \'help --all\' for help')
     }
 }
 

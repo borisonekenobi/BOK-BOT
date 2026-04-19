@@ -1,11 +1,13 @@
+const {log} = require('../../logger.ts');
+
 function version() {
-    const p = require('../../package.json');
-    console.log(p.version);
+    const p = require('../../../package.json');
+    log.info(p.version);
 }
 
 function help() {
-    console.log('version');
-    console.log('    Displays current bot version.');
+    log.info('version');
+    log.info('    Displays current bot version.');
 }
 
 module.exports = {version, help}

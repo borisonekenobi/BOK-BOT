@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS servers
+(
+    ID NUMERIC(19, 0) NOT NULL,
+
+    CONSTRAINT pk_server_id PRIMARY KEY (id)
+);
