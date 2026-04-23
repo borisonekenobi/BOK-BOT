@@ -27,11 +27,11 @@ export async function messageCreate(msg: Message<boolean>): Promise<void> {
 		if (levelIncreased === 0) return;
 
 		await updateUserRole(guild, author, levelIncreased);
-		await msg.channel.send(
+		await sendIfPossible(msg.channel,
 			`GG <@${msg.author.id}>, you just advanced to level ${levelIncreased}!`);
 	} catch (err) {
 		log.error(err);
-		await msg.channel.send('An error occurred!');
+		await sendIfPossible(msg.channel, 'An error occurred!');
 	}
 }
 
@@ -50,7 +50,7 @@ export async function messageUpdate(
 		await server.log(messageType.EDITED, guild, oldMessage, newMessage);
 	} catch (err) {
 		log.error(err);
-		await oldMessage.channel.send('An error occurred!');
+		await sendIfPossible(oldMessage.channel, 'An error occurred!');
 	}
 }
 
@@ -67,8 +67,16 @@ export async function messageDelete(deleteMessage: Message<boolean> | PartialMes
 		await server.log(messageType.DELETED, guild, deleteMessage);
 	} catch (err) {
 		log.error(err);
-		await deleteMessage.channel.send('An error occurred!');
+		await sendIfPossible(deleteMessage.channel, 'An error occurred!');
 	}
+}
+
+async function sendIfPossible(
+	channel: Message<boolean>['channel'] | PartialMessage['channel'],
+	content: string): Promise<void> {
+	if (!channel.isTextBased() || !('send' in channel)) return;
+
+	await channel.send(content);
 }
 
 async function getGuildMemberFromMessage(msg: Message<boolean>): Promise<GuildMember | null> {

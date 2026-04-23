@@ -1,8 +1,8 @@
 import {bot} from '../bot.js';
 import {log} from '../logger.js';
-import {
+import type {
 	AutocompleteInteraction,
-	CommandInteraction,
+	ChatInputCommandInteraction,
 	Interaction,
 	MessageComponentInteraction,
 	ModalSubmitInteraction,
@@ -20,51 +20,38 @@ import {createEmbed, requireGuildMember} from '../util.js';
 
 export async function interaction(interaction: Interaction): Promise<void> {
 	try {
-		let type = interaction.type;
-
 		let guildID = interaction.guildId;
-		let authorID = interaction.member?.user.id;
+		let authorID = interaction.user?.id;
 		log.verbose(
-			`Interaction type ${type} used by ${authorID} in guild ${guildID} in channel ${interaction.channelId}`);
+			`Interaction used by ${authorID} in guild ${guildID} in channel ${interaction.channelId}`);
 
-		switch (type) {
-			case 'PING':
-				await pingInteraction(interaction);
-				break;
-
-			case 'APPLICATION_COMMAND':
-				await applicationCommandInteraction(
-					interaction as CommandInteraction);
-				break;
-
-			case 'MESSAGE_COMPONENT':
-				return await messageComponentInteraction(
-					interaction as MessageComponentInteraction);
-
-			case 'APPLICATION_COMMAND_AUTOCOMPLETE':
-				await applicationCommandAutocompleteInteraction(
-					interaction as AutocompleteInteraction);
-				break;
-
-			case 'MODAL_SUBMIT':
-				await modalSubmitInteraction(
-					interaction as ModalSubmitInteraction);
-				break;
-
-			default:
-				log.error(`Unknown interaction type: ${interaction.type}`);
+		if (interaction.isChatInputCommand()) {
+			await applicationCommandInteraction(interaction);
+			return;
 		}
+
+		if (interaction.isMessageComponent()) {
+			await messageComponentInteraction(interaction);
+			return;
+		}
+
+		if (interaction.isAutocomplete()) {
+			await applicationCommandAutocompleteInteraction(interaction);
+			return;
+		}
+
+		if (interaction.isModalSubmit()) {
+			await modalSubmitInteraction(interaction);
+			return;
+		}
+
+		log.error(`Unknown interaction type: ${interaction.type}`);
 	} catch (err) {
 		log.error(err);
 	}
 }
 
-async function pingInteraction(interaction: Interaction): Promise<void> {
-	log.debug('type == 1');
-	log.debug(interaction);
-}
-
-async function applicationCommandInteraction(interaction: CommandInteraction): Promise<void> {
+async function applicationCommandInteraction(interaction: ChatInputCommandInteraction): Promise<void> {
 	let name = interaction.commandName;
 
 	let guild = interaction.guild;
@@ -85,35 +72,38 @@ async function applicationCommandInteraction(interaction: CommandInteraction): P
 				undefined;
 
 			if (!member || member.id === author.id) {
-				return await interaction.reply(
-					{embeds: [await level(guild, author)]});
+				await interaction.reply({embeds: [await level(guild, author)]});
+				return;
 			} else if (member.user.bot) {
-				return await interaction.reply({embeds: [infinite()]});
+				await interaction.reply({embeds: [infinite()]});
+				return;
 			} else {
-				return await interaction.reply(
+				await interaction.reply(
 					{embeds: [await level(guild, member, author)]});
+				return;
 			}
 
 		case 'logs':
-			return await interaction.reply(
-				{embeds: [await logs(interaction, guild)]});
+			await interaction.reply({embeds: [await logs(interaction, guild)]});
+			return;
 
 		case 'buttonrole':
-			let message = buttonRole(interaction);
+			const message = buttonRole(interaction);
 			await interaction.reply({
 				content: message.content, components: message.components,
 			});
 			return;
 
 		case 'role':
-			return await interaction.reply(
-				{embeds: [await role(interaction, guild)]});
+			await interaction.reply({embeds: [await role(interaction, guild)]});
+			return;
 
 		case 'startscore':
 			await interaction.reply({
 				embeds: [
-					createEmbed('#ff0', '', '', '', '', '',
-						'Scoring members...')],
+					createEmbed({
+						color: 'Yellow', description: 'Scoring members...',
+					})],
 			});
 			const channel = await bot.channels.fetch(
 				interaction.channelId!) as TextChannel;
@@ -121,7 +111,8 @@ async function applicationCommandInteraction(interaction: CommandInteraction): P
 			return;
 
 		case 'test':
-			return await interaction.reply({embeds: [test()]});
+			await interaction.reply({embeds: [test()]});
+			return;
 	}
 
 	throw new Error('Unknown slash command');
