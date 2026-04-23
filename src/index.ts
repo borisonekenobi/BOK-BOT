@@ -25,7 +25,7 @@ if (!TOKEN) {
 // 	}
 // });
 
-bot.login(TOKEN).then(r => log.debug('Used token: ' + r));
+await bot.login(TOKEN);
 
 bot.on('ready', ready);
 
