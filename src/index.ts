@@ -27,7 +27,7 @@ if (!TOKEN) {
 
 await bot.login(TOKEN);
 
-bot.on('ready', ready);
+bot.on('clientReady', ready);
 
 bot.on('interactionCreate', interaction);
 

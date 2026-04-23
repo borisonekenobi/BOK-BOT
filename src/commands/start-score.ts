@@ -1,12 +1,12 @@
 import {log} from '../logger.js';
-import {Guild, MessageEmbed} from 'discord.js';
+import {EmbedBuilder, Guild} from 'discord.js';
 
 import {getServerUsers} from '../db/server-users.js';
 import {getServerRoles} from '../db/server-roles.js';
 import {createServer, getServerById} from '../db/servers.js';
 import {createEmbed, giveRole} from '../util.js';
 
-export async function startScore(guild: Guild): Promise<MessageEmbed> {
+export async function startScore(guild: Guild): Promise<EmbedBuilder> {
 	let server = await getServerById(guild.id) ?? await createServer(guild.id);
 	if (!server) throw new Error('Could not find or create a server');
 
@@ -39,5 +39,5 @@ export async function startScore(guild: Guild): Promise<MessageEmbed> {
 		}
 	}
 
-	return createEmbed('#0f0', '', '', '', '', '', 'Done scoring members');
+	return createEmbed({color: 'Green', description: 'Done scoring members'});
 }

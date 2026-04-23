@@ -1,6 +1,6 @@
 import {log} from '../logger.js';
 import {
-	CommandInteraction, type EmbedFieldData, Guild, MessageEmbed, Role,
+	type APIEmbedField, ChatInputCommandInteraction, EmbedBuilder, Guild, Role,
 } from 'discord.js';
 
 import {createEmbed} from '../util.js';
@@ -9,7 +9,8 @@ import {
 } from '../db/dbRole.js';
 
 export async function role(
-	interaction: CommandInteraction, guild: Guild): Promise<MessageEmbed> {
+	interaction: ChatInputCommandInteraction,
+	guild: Guild): Promise<EmbedBuilder> {
 	let subcommand = interaction.options.getSubcommand();
 	switch (subcommand) {
 		case 'add':
@@ -26,7 +27,8 @@ export async function role(
 }
 
 async function add(
-	interaction: CommandInteraction, guild: Guild): Promise<MessageEmbed> {
+	interaction: ChatInputCommandInteraction,
+	guild: Guild): Promise<EmbedBuilder> {
 	const commandRole = await getRole(interaction, guild);
 	const level = interaction.options.getInteger('level', true);
 	if (!commandRole) {
@@ -34,19 +36,25 @@ async function add(
 	}
 
 	if (await serverHasRole(guild, commandRole)) {
-		return createEmbed('#f9a825', 'Warning!', '', '', '', '',
-			'That role is already setup!\n*Use* `/role edit` *to edit a role*');
+		return createEmbed({
+			color: 'DarkGold',
+			title: 'Warning!',
+			description: 'That role is already setup!\n*Use* `/role edit` *to edit a role*',
+		});
 	}
 
 	await addRole(guild, commandRole, level);
 
 	const role = guild.roles.cache.find(role => role.id === commandRole.id);
-	return createEmbed('#0f0', '', '', '', '', '',
-		`The ${role?.toString()} role has been set to level ${level}`);
+	return createEmbed({
+		color: 'Green',
+		description: `The ${role?.toString()} role has been set to level ${level}`,
+	});
 }
 
 async function edit(
-	interaction: CommandInteraction, guild: Guild): Promise<MessageEmbed> {
+	interaction: ChatInputCommandInteraction,
+	guild: Guild): Promise<EmbedBuilder> {
 	let commandRole = await getRole(interaction, guild);
 	let level = interaction.options.getInteger('level', true);
 	if (!commandRole) {
@@ -54,64 +62,87 @@ async function edit(
 	}
 
 	if (!await serverHasRole(guild, commandRole)) {
-		return createEmbed('#f9a825', 'Warning!', '', '', '', '',
-			'Role is not setup yet!\n*Use* `/role add` *to add a role*');
+		return createEmbed({
+			color: 'DarkGold',
+			title: 'Warning!',
+			description: 'Role is not setup yet!\n*Use* `/role add` *to add a role*',
+		});
 	}
 
 	await editRole(guild, commandRole, level);
 
 	const role = guild.roles.cache.find(role => role.id === commandRole.id);
-	return createEmbed('#0f0', '', '', '', '', '',
-		`The ${role?.toString()} role's level has been changed to ${level}`);
+	return createEmbed({
+		color: 'Green',
+		description: `The ${role?.toString()} role's level has been changed to ${level}`,
+	});
 }
 
-async function list(guild: Guild): Promise<MessageEmbed> {
+async function list(guild: Guild): Promise<EmbedBuilder> {
 	let roles = await listRoles(guild);
 	if (roles === undefined) {
 		log.error(`Failed to get roles for guild ${guild.id}`);
 		roles = [];
 	}
 
-	let fields = [];
+	const fields: APIEmbedField[] = [];
 	for (let server_role of roles) {
 		let role = guild.roles.cache.find(
 			role => role.id === server_role.role_id);
+		if (!role) {
+			log.error(
+				`Role ${server_role.role_id} configured for guild ${guild.id} was not found in the Discord role cache`);
+			continue;
+		}
+
 		let level = server_role.level === 0 ?
 			'Join Server:' :
 			`Level ${server_role.level}:`;
-		fields.push({name: level, value: role?.toString()} as EmbedFieldData);
+		fields.push({name: level, value: role.toString()});
 	}
 
 	if (fields.length === 0) {
-		return createEmbed('#0f0', '', '', '', '', '',
-			'No roles have been setup!\n*Use* `/role add` *to add a role*');
+		return createEmbed({
+			color: 'Green',
+			description: 'No roles have been setup!\n*Use* `/role add` *to add a role*',
+		});
 	} else {
-		return createEmbed('#0f0', '', '', '', '', '',
-			'All roles and their levels', '', fields);
+		return createEmbed({
+			color: 'Green',
+			description: 'All roles and their levels',
+			fields: fields,
+		});
 	}
 }
 
 async function remove(
-	interaction: CommandInteraction, guild: Guild): Promise<MessageEmbed> {
+	interaction: ChatInputCommandInteraction,
+	guild: Guild): Promise<EmbedBuilder> {
 	let commandRole = await getRole(interaction, guild);
 	if (!commandRole) {
 		throw new Error('Role not found');
 	}
 
 	if (!await serverHasRole(guild, commandRole)) {
-		return createEmbed('#f9a825', 'Warning!', '', '', '', '',
-			'Role is not setup yet!\n*Use* `/role add` *to add a role*');
+		return createEmbed({
+			color: 'DarkGold',
+			title: 'Warning!',
+			description: 'Role is not setup yet!\n*Use* `/role add` *to add a role*',
+		});
 	}
 
 	await removeRole(guild, commandRole);
 
 	const role = guild.roles.cache.find(role => role.id === commandRole.id);
-	return createEmbed('#0f0', '', '', '', '', '',
-		`The ${role?.toString()} role has been removed`);
+	return createEmbed({
+		color: 'Green',
+		description: `The ${role?.toString()} role has been removed`,
+	});
 }
 
 async function getRole(
-	interaction: CommandInteraction, guild: Guild): Promise<Role | null> {
+	interaction: ChatInputCommandInteraction,
+	guild: Guild): Promise<Role | null> {
 	const role = interaction.options.getRole('role', true);
 	if (role instanceof Role) return role;
 
@@ -121,6 +152,7 @@ async function getRole(
 	try {
 		return await guild.roles.fetch(role.id);
 	} catch (err) {
+		log.error(err);
 		return null;
 	}
 }
