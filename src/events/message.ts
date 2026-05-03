@@ -1,11 +1,12 @@
 import {log} from '../logger.js';
 import {GuildMember, Message, type PartialMessage} from 'discord.js';
 
-import {server} from '../commands/server-logs.js';
-import {messageType} from '../types.js';
-
 import {updateUserRole} from '../commands/update-user-role.js';
 import {updateUser} from '../db/dbLevel.js';
+import {
+	logDeletedMessage,
+	logEditedMessage,
+} from '../log-events/message-events.js';
 
 export async function messageCreate(msg: Message<boolean>): Promise<void> {
 	try {
@@ -31,7 +32,6 @@ export async function messageCreate(msg: Message<boolean>): Promise<void> {
 			`GG <@${msg.author.id}>, you just advanced to level ${levelIncreased}!`);
 	} catch (err) {
 		log.error(err);
-		await sendIfPossible(msg.channel, 'An error occurred!');
 	}
 }
 
@@ -47,10 +47,9 @@ export async function messageUpdate(
 
 		log.verbose(
 			`${oldMessage.author?.id} edited message in guild ${guild.id} in channel ${oldMessage.channel.id}`);
-		await server.log(messageType.EDITED, guild, oldMessage, newMessage);
+		await logEditedMessage(guild, oldMessage, newMessage);
 	} catch (err) {
 		log.error(err);
-		await sendIfPossible(oldMessage.channel, 'An error occurred!');
 	}
 }
 
@@ -64,10 +63,9 @@ export async function messageDelete(deleteMessage: Message<boolean> | PartialMes
 
 		log.verbose(
 			`${deleteMessage.author?.id} deleted message in guild ${guild.id} in channel ${deleteMessage.channel.id}`);
-		await server.log(messageType.DELETED, guild, deleteMessage);
+		await logDeletedMessage(guild, deleteMessage);
 	} catch (err) {
 		log.error(err);
-		await sendIfPossible(deleteMessage.channel, 'An error occurred!');
 	}
 }
 
