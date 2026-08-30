@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "discord.js": "^14.27.0",
-    "dotenv": "^8.6.0",
+    "dotenv": "^17.4.2",
     "pg": "^8.23.0",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.8",
